@@ -38,3 +38,15 @@ def inventory_menu(con, header, inventory, inventory_width, screen_width, screen
         options = [item.name for item in inventory.items]
         
     menu(con, header, options, inventory_width, screen_width, screen_height)
+
+def main_menu(con, background_image, screen_width, screen_height):
+    libtcod.image_blit_2x(background_image, 0, 0, 0)
+
+    libtcod.console_set_default_foreground(0, libtcod.light_yellow)
+    libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE, libtcod.CENTER, "0 WELL")
+    libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 2, libtcod.BKGND_NONE, libtcod.CENTER, "by LIAM")
+
+    menu(con, '',  ['play a new game', 'continue last game', 'quit'], 24, screen_width, screen_height)
+
+def message_box(con, header, width, screen_width, screen_height):
+    menu(con, header, [], width, screen_width, screen_height)
