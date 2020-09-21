@@ -4,14 +4,13 @@ from map_objects.game_map import GameMap
 from loader_functions.initialize_new_game import get_constants, get_game_variables
 from loader_functions.data_loaders import load_game, save_game
 
-
-from render_functions import clear_all, render_all,
-from entity import get_blocking_entities_at_location
-from input_handlers import handle_keys, handle_mouse, handle_main_menu
-from fov_functions import initialize_fov, recompute_fov
-from game_states import GameStates
 from death_functions import kill_monster, kill_player
-from game_messages import MessageLog
+from entity import get_blocking_entities_at_location
+from fov_functions import initialize_fov, recompute_fov
+from game_messages import Message
+from game_states import GameStates
+from render_functions import render_all, clear_all
+from input_handlers import handle_keys, handle_mouse, handle_main_menu
 from menus import main_menu, message_box
 
 
@@ -23,6 +22,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
     key = libtcod.Key()
     mouse = libtcod.Mouse()
 
+    #this line was slated for removal but ended up in the final code on github
+    #game_state = GameStates.PLAYERS_TURN
     previous_game_state = game_state
 
     targeting_item = None
@@ -34,7 +35,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
             recompute_fov(fov_map, player.x, player.y, constants['fov_radius'], constants['fov_light_walls'], constants['fov_algorithm'])
 
         render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log, constants['screen_width'],
-                        constants['screen_height'], constants['bar_width, panel_height'], constants['panel_y'], mouse, constants['colors'], game_state)
+                        constants['screen_height'], constants['bar_width'], constants['panel_height'], constants['panel_y'], mouse, constants['colors'], game_state)
         
         fov_recompute = False
 
@@ -144,7 +145,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                 else:
                     message = kill_monster(dead_entity)
 
-                    message_log.add_message(message)
+                message_log.add_message(message)
 
             if item_added:
                 entities.remove(item_added)
@@ -204,6 +205,9 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 def main():
     constants = get_constants()
 
+    con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
+    panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
+
     player = None
     entities = []
     game_map = None
@@ -218,15 +222,11 @@ def main():
     libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 
     libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
+
+    key = libtcod.Key()
+    mouse = libtcod.Mouse()
     
-    con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
-    panel = libtcod.console_new((constants['screen_width'], constants['panel_height'])
-
-
-
-
-
-    while 
+    while not libtcod.console_is_window_closed():  
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 
         if show_main_menu:
@@ -265,6 +265,8 @@ def main():
 
             show_main_menu = True
         
+    
+
 
 
 if __name__ == '__main__':

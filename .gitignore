@@ -2,3 +2,5 @@
 .venv
 *.pyc
 .Ds_Store
+Savegame.dat.db
+Savegame.dat
